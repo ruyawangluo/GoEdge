@@ -22,6 +22,12 @@ REPO_NAME="GoEdge"
 FILE_PATH="edge-admin-install.sh"
 BRANCH="main"
 
+# Gitea 认证信息
+GITEA_AUTH_TYPE=""   # "password" 或 "token"
+GITEA_USERNAME=""
+GITEA_PASSWORD=""
+GITEA_TOKEN=""
+
 # 平台配置
 declare -A PLATFORMS
 PLATFORMS[1]="GitHub"
@@ -73,7 +79,7 @@ confirm_action() {
 # 显示欢迎信息
 show_welcome() {
     print_separator
-    echo -e "${BOLD}         GoEdge 安装助手${NC}"
+    echo -e "${BOLD}        安装助手${NC}"
     print_separator
     echo ""
     echo "  请选择下载源平台："
@@ -93,14 +99,73 @@ check_platform() {
 
     print_info "正在检测 ${platform_name} 可用性..."
 
+    # 构建 curl 认证参数
+    local auth_args=()
+    if [ "$platform_id" -eq 2 ] && [ -n "$GITEA_AUTH_TYPE" ]; then
+        if [ "$GITEA_AUTH_TYPE" = "password" ]; then
+            auth_args+=(-u "${GITEA_USERNAME}:${GITEA_PASSWORD}")
+        elif [ "$GITEA_AUTH_TYPE" = "token" ]; then
+            auth_args+=(-H "Authorization: token ${GITEA_TOKEN}")
+        fi
+    fi
+
     # 使用 HEAD 请求检测，超时 5 秒
-    if curl -s --head --max-time 5 "$url" | head -1 | grep -q "200\|206"; then
+    if curl -s --head --max-time 5 ${auth_args[@]} "$url" | head -1 | grep -q "200\|206"; then
         print_success "${platform_name} 可用"
         return 0
     else
         print_warn "${platform_name} 不可用或访问受限"
         return 1
     fi
+}
+
+# ============================================
+# Gitea 登录认证
+# ============================================
+gitea_login() {
+    echo ""
+    print_separator
+    echo -e "${BOLD}         Gitea 账户登录${NC}"
+    print_separator
+    echo ""
+    echo "  该仓库为私有仓库，需要登录认证才能访问。"
+    echo "  请选择认证方式："
+    echo ""
+    echo "    1) 用户名 + 密码"
+    echo "    2) Personal Access Token (令牌)"
+    echo "    0) 跳过登录（仅公开仓库可用）"
+    echo ""
+    print_separator
+
+    read -p "请输入选项 (0-2): " auth_choice
+
+    case $auth_choice in
+        1)
+            echo ""
+            read -p "请输入 Gitea 用户名: " GITEA_USERNAME
+            read -s -p "请输入 Gitea 密码: " GITEA_PASSWORD
+            echo ""
+            GITEA_AUTH_TYPE="password"
+            print_success "密码认证设置完成"
+            ;;
+        2)
+            echo ""
+            echo -e "${YELLOW}提示：Token 可在 Gitea 网页端「设置 > 应用 > 管理 Access Token」中生成${NC}"
+            echo ""
+            read -p "请输入 Personal Access Token: " GITEA_TOKEN
+            GITEA_AUTH_TYPE="token"
+            print_success "Token 认证设置完成"
+            ;;
+        0)
+            print_warn "已跳过登录，将尝试匿名访问"
+            GITEA_AUTH_TYPE=""
+            ;;
+        *)
+            print_error "无效选项，默认跳过登录"
+            GITEA_AUTH_TYPE=""
+            ;;
+    esac
+    echo ""
 }
 
 # 自动检测最快源
@@ -124,8 +189,19 @@ download_file() {
 
     print_step "正在从 ${platform_name} 下载 ${FILE_PATH} ..."
 
+    # 构建 curl 认证参数
+    local auth_args=()
+    if [ "$platform_id" -eq 2 ] && [ -n "$GITEA_AUTH_TYPE" ]; then
+        if [ "$GITEA_AUTH_TYPE" = "password" ]; then
+            auth_args+=(-u "${GITEA_USERNAME}:${GITEA_PASSWORD}")
+        elif [ "$GITEA_AUTH_TYPE" = "token" ]; then
+            auth_args+=(-H "Authorization: token ${GITEA_TOKEN}")
+        fi
+    fi
+
     # 使用浏览器 User-Agent，跟随重定向
     if curl -L \
+        ${auth_args[@]} \
         -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
         -o "${FILE_PATH}" \
         --max-time 30 \
@@ -189,6 +265,14 @@ main() {
             ;;
         1|2)
             selected=$choice
+            # 如果选择 Gitea，提示是否需要登录
+            if [ "$selected" -eq 2 ]; then
+                echo ""
+                read -p "$(echo -e "${YELLOW}[确认]${NC} 是否需要登录 Gitea 账户? (y/n): ")" need_login
+                if [[ "$need_login" =~ ^[Yy]$ ]]; then
+                    gitea_login
+                fi
+            fi
             if ! check_platform $selected; then
                 print_error "您选择的平台不可用"
                 confirm_action "是否尝试自动检测其他平台?" || exit 0
