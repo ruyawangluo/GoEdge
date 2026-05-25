@@ -4,5 +4,5 @@
 
 # 一键安装脚本
 ```
-bash <(curl -sL gitea.ruyawangluo.cn/ruyawangluo/GoEdge/raw/branch/main/edge-admin-install.sh)
+curl -o edge-admin-install.sh "https://gitea.ruyawangluo.cn/ruyawangluo/GoEdge/raw/branch/main/edge-admin-install.sh" && chmod +x edge-admin-install.sh && bash edge-admin-install.sh
 ```
