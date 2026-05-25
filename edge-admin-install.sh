@@ -90,8 +90,8 @@ cd edge-api/deploy
 rm -rf *.zip
 
 # 拉取纯净plus版本程序包
-wget -O edge-node-linux-amd64-v1.3.9.zip https://gitea.ruyawangluo.cn/ruyawangluo/GoEdge/releases/download/v1.3.9/edge-node-linux-amd64-v1.3.9.zip
-wget -O edge-node-linux-arm64-v1.3.9.zip https://gitea.ruyawangluo.cn/ruyawangluo/GoEdge/releases/download/v1.3.9/edge-node-linux-arm64-v1.3.9.zip
+wget -O edge-node-linux-amd64-plus-v1.3.9.zip https://gitea.ruyawangluo.cn/ruyawangluo/GoEdge/releases/download/v1.3.9/edge-node-linux-amd64-plus-v1.3.9.zip
+wget -O edge-node-linux-arm64-plus-v1.3.9.zip https://gitea.ruyawangluo.cn/ruyawangluo/GoEdge/releases/download/v1.3.9/edge-node-linux-arm64-plus-v1.3.9.zip
 wget -O edge-dns-linux-amd64-v1.3.9.zip https://gitea.ruyawangluo.cn/ruyawangluo/GoEdge/releases/download/v1.3.9/edge-dns-linux-amd64-v1.3.9.zip
 wget -O edge-dns-linux-arm64-v1.3.9.zip https://gitea.ruyawangluo.cn/ruyawangluo/GoEdge/releases/download/v1.3.9/edge-dns-linux-arm64-v1.3.9.zip
 wget -O edge-user-linux-amd64-v1.3.9.zip https://gitea.ruyawangluo.cn/ruyawangluo/GoEdge/releases/download/v1.3.9/edge-user-linux-amd64-v1.3.9.zip
