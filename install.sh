@@ -113,7 +113,7 @@ download_file() {
         
         # 验证下载内容
         if [ -f "${FILE_PATH}" ] && [ -s "${FILE_PATH}" ]; then
-            # 检查是否是 HTML（错误页面）
+            # 检查是否是 HTML 错误页面
             if head -1 "${FILE_PATH}" | grep -q "<!DOCTYPE\|<html"; then
                 print_error "下载到的是 HTML 页面，不是脚本文件"
                 rm -f "${FILE_PATH}"
