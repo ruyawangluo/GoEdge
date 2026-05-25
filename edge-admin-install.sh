@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# 判断本机的CPU架构和操作系统版本
+# 判断本机的处理器架构和操作系统版本
 cpu_arch=$(uname -m)
 os_version=$(cat /etc/os-release | grep PRETTY_NAME | cut -d '"' -f 2)
-echo "本机CPU架构：$cpu_arch"
+echo "本机处理器架构：$cpu_arch"
 echo "本机操作系统版本：$os_version"
 
 # 更新软件包列表
@@ -35,7 +35,10 @@ if [ ! -d "/usr/local/goedge" ]; then
     sudo mkdir -p /usr/local/goedge
     echo "安装目录创建成功，默认为/usr/local/goedge"
 else
-    echo "检测到/usr/local/goedge已存在，您可能已经安装过goedge，无需重复安装，脚本已退出！"
+    echo "检测到"
+    echo "/usr/local/goedge"
+    echo "已存在"
+    echo "您可能已经安装过管理面板，无需重复安装，脚本已退出！"
     exit 1
 fi
 
@@ -91,12 +94,16 @@ wget -O edge-node-linux-amd64-v1.3.9.zip https://gitea.ruyawangluo.cn/ruyawanglu
 wget -O edge-node-linux-arm64-v1.3.9.zip https://gitea.ruyawangluo.cn/ruyawangluo/GoEdge/releases/download/v1.3.9/edge-node-linux-arm64-v1.3.9.zip
 wget -O edge-dns-linux-amd64-v1.3.9.zip https://gitea.ruyawangluo.cn/ruyawangluo/GoEdge/releases/download/v1.3.9/edge-dns-linux-amd64-v1.3.9.zip
 wget -O edge-dns-linux-arm64-v1.3.9.zip https://gitea.ruyawangluo.cn/ruyawangluo/GoEdge/releases/download/v1.3.9/edge-dns-linux-arm64-v1.3.9.zip
+wget -O edge-user-linux-amd64-v1.3.9.zip https://gitea.ruyawangluo.cn/ruyawangluo/GoEdge/releases/download/v1.3.9/edge-user-linux-amd64-v1.3.9.zip
+wget -O edge-user-linux-arm64-v1.3.9.zip https://gitea.ruyawangluo.cn/ruyawangluo/GoEdge/releases/download/v1.3.9/edge-user-linux-arm64-v1.3.9.zip
 
 # 流程执行完毕，输出管理平台地址及通用注册码
 clear
 ipv4_address=$(curl -s ipv4.ip.sb)
-echo -e "\033[1;33m执行完毕！请通过浏览器访问 http://$ipv4_address:7788/ 进入管理平台，并依据页面提示完成最后的安装流程！\033[0m"
-echo -e "\033[1;33m如果无法访问，请检查是否已在防火墙/安全租中开放7788端口！\033[0m"
+echo -e "\033[1;33m 执行完毕！请通过浏览器访问：\033[0m"
+echo -e "\033[1;33m http://$ipv4_address:7788/ \033[0m"
+echo -e "\033[1;33m 进入管理平台，并依据页面提示完成最后的安装流程！ \033[0m"
+echo -e "\033[1;33m 如果无法访问，请检查是否已在防火墙/安全租中开放对应端口！ \033[0m"
 echo -e "-------------"
 echo -e "如需激活旗舰版，请于安装完成后，在管理平台依次点击「系统设置」>「商业版本」>「激活」，粘贴下方提供的注册码即可完成离线永久授权："
 echo -e "F4BuVYEKSDWV+I13ISd5NUyBcWOlH0af4/ow9obzYBS3XvYC9IsK86k5UDyyBv9vqJWN2/FQTDbPyuAO0zxYlkLDC0c8rrShs+7PAkqM0O8wBIGknzForgidDZahky5Lo/ZWaPZ1dVFUxmV29ykb0I0b4tv7Q3OtnTylOuzf//MYrlvyw6VJQMGnsttmeHzsNL/r0yDONOEXZoGoLZsuBKnkfXt+qt6bZF+kM1ncbh+sY42BrPTWQ12sXqJS3qHlzU0FFl9lTNzLGYYhq5vi/4sJuPVE50/uLCtslTJdb9zOGR915hnM+jHYsR+jUk0QxOqtreaHpsvNuLkexXbkmA=="
