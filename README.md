@@ -5,6 +5,8 @@
 还可以直接使用下面得一键安装脚本安装<br>
 
 # 一键安装脚本
+
+Github安装脚本
 ```
-curl -o edge-admin-install.sh "https://gitea.ruyawangluo.cn/ruyawangluo/GoEdge/raw/branch/main/edge-admin-install.sh" && chmod +x edge-admin-install.sh && bash edge-admin-install.sh
+curl -o edge-admin-install.sh "https://raw.githubusercontent.com/ruyawangluo/GoEdge/main/edge-admin-install.sh" && chmod +x edge-admin-install.sh && bash edge-admin-install.sh
 ```
