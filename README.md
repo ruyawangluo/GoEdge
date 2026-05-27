@@ -8,5 +8,5 @@
 
 Github安装脚本
 ```
-curl -o edge-admin-install.sh "https://raw.githubusercontent.com/ruyawangluo/GoEdge/main/edge-admin-install.sh" && chmod +x edge-admin-install.sh && bash edge-admin-install.sh
+curl -sSL "https://raw.githubusercontent.com/ruyawangluo/GoEdge/main/edge-admin-install.sh" | bash
 ```
